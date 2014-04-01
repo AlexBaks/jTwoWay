@@ -1,4 +1,4 @@
-jtw.ajax['x-connector'] = function( action, post) {
+jtw.connector['modx_x'] = function( action, post) {
 
 	if (action == undefined) {
 		var get = '';
@@ -21,7 +21,7 @@ jtw.ajax['x-connector'] = function( action, post) {
     });
 }
 
-jtw.ajax['ajax-migx-connector'] = function( view, action, post) {
+jtw.connector['modx_migx'] = function( view, action, post) {
 
 	if (action == undefined) {
 		var get = '';
