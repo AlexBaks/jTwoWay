@@ -1,8 +1,9 @@
 var jTwoWay = function(){
-	var func = {};
+	var ajax = {};
 	var slot = {};
 	var view = {};
 	var thisElement;
+	var config = {}
 	/*
 		получаем сигнал от элемента, сопостовляем со slot
 		если подходящий slot не найден, то выдаем ошибку.
@@ -16,19 +17,28 @@ var jTwoWay = function(){
 		}
 	}
 	
-	this.runView = function( viwe, data, thisElement ){ 
-		if (viwe in jtw.func) { 
-			return jtw.viwe[viwe](data,thisElement);
+	this.runAjax = function( ajax, view, action, post ){ 
+		if (ajax in jtw.ajax) { 
+			return jtw.ajax[ajax](view, action, post);
 		} else {
-			console.log('jtw.viwe: '+viwe+' не найден');
+			console.log('jtw.ajax: '+ajax+' не найден');
+		}
+	}
+	
+	this.runView = function( view, json ){ 
+		if (view in jtw.view) { 
+			return jtw.view[view]( json );
+		} else {
+			console.log('jtw.view: '+view+' не найден');
 		}
 	}
 }	
 
 var jtw = new jTwoWay();
-jtw.func = {};
+jtw.ajax = {};
 jtw.slot = {};
 jtw.view = {};
+jtw.config = {};
 
 $( document ).ready(function() {
 
@@ -57,60 +67,3 @@ $( document ).ready(function() {
     });
 	
 });
-
-
-jtw.func['x-action'] = function( action, post) {
-
-	if (action == '') {
-		var get = '';
-	}else{
-		var get = "?action="+action;
-	}
-
-	$.ajax({
-        type: "POST",
-        url: "assets/components/xcore/connectors.php"+get,
-        data: post,
-		dataType : "json",
-		success: function ( json ) {
-			jtw.view[view]( json );
-		}
-    });
-}
-
-jtw.func['migx-action'] = function( view, action, post) {
-
-	post['start'] = 0;
-	post['limit'] = 10
-	post['action'] = 'mgr/migxdb/getList';
-	post['configs'] = 'catalog';
-	post['reqTempParams'] = '';
-	post['reqConfigs'] = 'catalog';
-	post['resource_id'] = '';
-	post['object_id'] = '';
-
-
-	$.ajax({
-        type: "POST",
-        url: "assets/components/migx/connector.php",
-        data: post,
-		dataType : "json",
-		success: function ( json ) {
-			jtw.view[view](json);
-		}
-	});
-}
-
-jtw.slot['action'] = function( thisElement ) {
-	var action = thisElement.attr('x-action');
-	var rowId = thisElement.attr('x-row-id');
-	var post = {};
-	post['id'] = 'fdg';
-	var json = jtw.func['migx-action']('go',action,post);
-	return false
-}
-
-jtw.view['go'] = function( json ) {
-	console.log(jtw.thisElement.attr('href'));
-	console.log(json.message);
-}
