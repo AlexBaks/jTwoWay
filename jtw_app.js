@@ -8,7 +8,7 @@ jtw.slot['action'] = function( thisElement ) {
 	var post = {};
 	
 	view = 'go';	
-	jtw.runConnector('migx',view,action,post);
+	jtw.runConnector('modx_migx',view,action,post);
 	
 	return false
 }
