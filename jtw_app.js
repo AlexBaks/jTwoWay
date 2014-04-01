@@ -1,6 +1,5 @@
 jtw.config['modx_assets_path'] = 'assets/components/';
 
-
 jtw.slot['action'] = function( thisElement ) {
 	
 	var action = thisElement.attr('x-action');
@@ -8,8 +7,8 @@ jtw.slot['action'] = function( thisElement ) {
 	var view = thisElement.attr('x-view');
 	var post = {};
 	
-	view = 'go6';	
-	jtw.runAjax('ajax-migx-connector',view,action,post);
+	view = 'go';	
+	jtw.runConnector('migx',view,action,post);
 	
 	return false
 }
