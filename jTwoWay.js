@@ -1,6 +1,6 @@
 var jTwoWay = function(){
-	var ajax = {};
 	var slot = {};
+	var connector = {};
 	var view = {};
 	var thisElement;
 	var config = {}
@@ -17,11 +17,11 @@ var jTwoWay = function(){
 		}
 	}
 	
-	this.runAjax = function( ajax, view, action, post ){ 
-		if (ajax in jtw.ajax) { 
-			return jtw.ajax[ajax](view, action, post);
+	this.runConnector = function( connector, view, action, post ){ 
+		if (connector in jtw.connector) { 
+			return jtw.connector[connector](view, action, post);
 		} else {
-			console.log('jtw.ajax: '+ajax+' не найден');
+			console.log('jtw.ajax: '+connector+' не найден');
 		}
 	}
 	
@@ -35,8 +35,8 @@ var jTwoWay = function(){
 }	
 
 var jtw = new jTwoWay();
-jtw.ajax = {};
 jtw.slot = {};
+jtw.connector = {};
 jtw.view = {};
 jtw.config = {};
 
