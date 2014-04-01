@@ -2,12 +2,13 @@ var jTwoWay = function(){
 	var func = {};
 	var slot = {};
 	var view = {};
+	var thisElement;
 	/*
 		получаем сигнал от элемента, сопостовляем со slot
 		если подходящий slot не найден, то выдаем ошибку.
 	*/
 	this.runSlot = function( signal, thisElement ){ 
-
+		this.thisElement = thisElement;
 		if (signal in jtw.slot) { 
 				return jtw.slot[signal]( thisElement );
 		} else {
@@ -59,14 +60,45 @@ $( document ).ready(function() {
 
 
 jtw.func['x-action'] = function( action, post) {
+
+	if (action == '') {
+		var get = '';
+	}else{
+		var get = "?action="+action;
+	}
+
 	$.ajax({
         type: "POST",
-        url: "assets/components/xcore/connectors.php"+"?action="+action,
+        url: "assets/components/xcore/connectors.php"+get,
         data: post,
-		success: function ( data ) {
-			return data;
+		dataType : "json",
+		success: function ( json ) {
+			jtw.view[view]( json );
 		}
     });
+}
+
+jtw.func['migx-action'] = function( view, action, post) {
+
+	post['start'] = 0;
+	post['limit'] = 10
+	post['action'] = 'mgr/migxdb/getList';
+	post['configs'] = 'catalog';
+	post['reqTempParams'] = '';
+	post['reqConfigs'] = 'catalog';
+	post['resource_id'] = '';
+	post['object_id'] = '';
+
+
+	$.ajax({
+        type: "POST",
+        url: "assets/components/migx/connector.php",
+        data: post,
+		dataType : "json",
+		success: function ( json ) {
+			jtw.view[view](json);
+		}
+	});
 }
 
 jtw.slot['action'] = function( thisElement ) {
@@ -74,13 +106,11 @@ jtw.slot['action'] = function( thisElement ) {
 	var rowId = thisElement.attr('x-row-id');
 	var post = {};
 	post['id'] = 'fdg';
-	console.log(post);
-	var data = jtw.func['x-action'](action,post);
-	jtw.view['go'](data,thisElement);
-	
+	var json = jtw.func['migx-action']('go',action,post);
 	return false
 }
 
-jtw.view['go'] = function( data, thisElement ) {
-	console.log(data);
+jtw.view['go'] = function( json ) {
+	console.log(jtw.thisElement.attr('href'));
+	console.log(json.message);
 }
